@@ -1,24 +1,35 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
+  "name": "marvel-francl-in-webapp",
+  "description": "Aplicação _frontend_ com autenticação, gerenciamentos de usuários e de comics/characters favoritos.",
+  "version": "0.0.0",
+  "private": false,
+  "license": "MIT",
+  "author": {
+    "name": "Franclin Sousa",
+    "email": "f@francl.in",
+    "url": "https://francl.in"
+  },
+  "homepage": "http://marvel.francl.in",
+  "repository": {
+    "url": "https://github.com/franclinsousa/marvel-silver-enigma.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "core-js": "^3.10.2",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "~4.5.12",
+    "@vue/cli-plugin-eslint": "~4.5.12",
+    "@vue/cli-service": "~4.5.12",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11"
+    "eslint": "^7.24.0",
+    "eslint-plugin-vue": "^7.9.0",
+    "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
     "root": true,
