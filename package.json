@@ -8,6 +8,11 @@
     "email": "f@francl.in",
     "url": "https://francl.in"
   },
+  "homepage": "http://marvel.francl.in",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/franclinsousa/marvel-silver-enigma.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -48,10 +53,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "homepage": "http://marvel.francl.in",
-  "license": "MIT",
-  "repository": {
-    "url": "https://github.com/franclinsousa/marvel-silver-enigma.git"
-  }
+  ]
 }
