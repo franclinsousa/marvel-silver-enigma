@@ -5,7 +5,7 @@ import Layout from "@/components/Layout";
 import Home from "@/views/Home";
 import Signin from '@/views/Signin'
 import Signup from "@/views/Signup";
-import Profile from "@/views/Profile"
+import Account from "@/views/Account"
 
 
 /**
@@ -37,9 +37,9 @@ const routes = [
                 component: Home,
             },
             {
-                path: "/profile",
-                name: "profile",
-                component: Profile,
+                path: "/account",
+                name: "account",
+                component: Account,
             },
         ]
     }
@@ -52,7 +52,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    console.log("Indo para >>> ", to)
     switch (to.name) {
         case "signin":
         case "signup":

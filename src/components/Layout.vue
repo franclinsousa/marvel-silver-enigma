@@ -15,11 +15,11 @@
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img :src="`https://www.gravatar.com/avatar/${hashForAvatar}?d=monsterid`" alt="mdo" width="32" height="32" class="rounded-circle d-sm-none d-md-inline">
-                                <small class="d-sm-inline d-md-none text-uppercase">{{ user.username || "more" }}</small>
+                                <img :src="`https://www.gravatar.com/avatar/${hashForAvatar}?d=monsterid`" alt="mdo" width="32" height="32" class="rounded-circle d-none d-sm-none d-md-inline">
+                                <small class="d-sm-inline d-md-none text-uppercase">{{ username }}</small>
                             </a>
                             <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser1">
-                                <li><router-link class="dropdown-item" :to="{name: 'profile'}" active-class="active">Profile</router-link></li>
+                                <li><router-link class="dropdown-item" :to="{name: 'account'}" active-class="active">Account</router-link></li>
                                 <li><hr class="dropdown-divider d-md-block d-sm-none"></li>
                                 <li><button class="btn dropdown-item" @click="signout">Sign out</button></li>
                             </ul>
@@ -48,8 +48,11 @@ export default {
     },
     computed: {
         hashForAvatar: function () {
-            return this.user.username && crypto.createHash("md5").update(this.user.username).digest("hex")
-        }
+            return this.user?.email && crypto.createHash("md5").update(this.user.email).digest("hex")
+        },
+        username: function() {
+            return this.user?.username || "more"
+        },
     },
     methods: {
         signout() {

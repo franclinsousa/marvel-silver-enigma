@@ -53,7 +53,6 @@ export default
         signin() {
             authService.signin(this.credentials)
                 .then( _ => {
-                    console.log(_)
                     this.$router.push({name: "home"})
                 })
                 .catch( err => {

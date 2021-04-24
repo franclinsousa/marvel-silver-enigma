@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import store from "@/store"
 import api from "./api.service"
+import userService from "./user.service"
 
 
 const endpoint = "/api/auth"
@@ -17,7 +18,13 @@ const authService = {
                 const encoded = res.data.access_token
                 const decoded = jwt.decode(encoded)
                 store.dispatch("signin", {encoded, decoded})
-                return decoded
+                return {encoded, decoded}
+            })
+            .then(function(token) {
+                return userService.me()
+                    .then(function(user) {
+                        store.dispatch("setCurrentUser", user)
+                    })
             })
             .catch(err => Promise.reject(err.response.data))
     },
@@ -47,9 +54,7 @@ const authService = {
      * @return {Object}
      */
     getCurrentUser() {
-        return {
-            username: store.getters.token?.decoded.sub
-        }
+        return store.getters.user
     }
 }
 
