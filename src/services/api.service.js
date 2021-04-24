@@ -8,7 +8,7 @@ const httpClient = axios.create({
 })
 
 httpClient.interceptors.request.use(req => {
-    const {encoded} = store.getters.token
+    const encoded = store.getters.token?.encoded
     if(encoded) {
         req.headers["Authorization"] = `Bearer ${encoded}`
     }
