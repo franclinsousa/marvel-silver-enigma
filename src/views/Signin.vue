@@ -53,7 +53,7 @@ export default
         signin() {
             authService.signin(this.credentials)
                 .then( _ => {
-                    this.$router.push({name: "home"})
+                    this.$router.push({name: "comics"})
                 })
                 .catch( err => {
                     Swal.fire({

@@ -9,7 +9,7 @@
                 <div class="navbar-collapse collapse" id="navbarCollapse" style="">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <router-link class="nav-link" :to="{name: 'home'}" active-class="text-primary">Home</router-link>
+                            <router-link class="nav-link" :to="{name: 'comics'}" active-class="text-primary">Comics</router-link>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
@@ -92,11 +92,14 @@ html
     overflow: hidden
 
 body
-    top: 82px
+    top: 81px
     bottom: 0
     position: absolute
     overflow: auto
     width: 100%
+@media (max-width: 768px)
+    body
+        top: 73px !important
 
 
 </style>

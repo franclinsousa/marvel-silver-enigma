@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter, {RouteConfig} from 'vue-router'
-import {authService} from "@/services";
-import Layout from "@/components/Layout";
-import Home from "@/views/Home";
+import {authService} from "@/services"
+import Layout from "@/components/Layout"
 import Signin from '@/views/Signin'
-import Signup from "@/views/Signup";
+import Signup from "@/views/Signup"
 import Account from "@/views/Account"
+import Comic from "@/views/comic/Comic"
+import ComicList from "@/views/comic/ComicList"
+import ComicDetails from "@/views/comic/ComicDetails"
 
 
 /**
@@ -25,16 +27,29 @@ const routes = [
     },
     {
         path: '/',
-        redirect: "/home",
+        redirect: "/comics",
         component: Layout,
         props: router => ({
             user: authService.getCurrentUser()
         }),
         children: [
             {
-                path: "/home",
+                path: "/comics",
                 name: "home",
-                component: Home,
+                component: Comic,
+                children: [
+                    {
+                        path: "/comics",
+                        name: "comics",
+                        component: ComicList,
+                    },
+                    {
+                        path: "/comics/:comicId",
+                        name: "comic-details",
+                        props: true,
+                        component: ComicDetails,
+                    },
+                ],
             },
             {
                 path: "/account",
