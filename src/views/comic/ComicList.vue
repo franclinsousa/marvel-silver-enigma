@@ -1,40 +1,51 @@
 <template>
     <div @scroll.passive="onScroll">
         <div class="row">
-            <div class="col">
+            <div class="col-4">
                 <h1>Comics</h1>
             </div>
-            <form class="col-5 col-lg-auto mb-3 mb-lg-0 me-lg-3" @keydown.prevent.enter="onSearch">
+            <div class="col-3">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                           @change="showOnlyFavorite"
+                           v-model="onlyFavorite"
+                    >
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Show only favorite</label>
+                </div>
+            </div>
+            <form class="col-5" @keydown.prevent.enter="onSearch">
                 <input type="search" class="form-control" placeholder="Search..." v-model="search">
             </form>
         </div>
-        <div class="row" v-for="comic of comics" :key="comic.id">
-            <div class="card mb-4 mt-4 g-0 shadow-lg border-0">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img :src="getImg(comic)" class="card-img-top h-100" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <router-link :to="{name: 'comic-details', params: {comicId: comic.id}}"
-                                         v-slot="{navigate}"
-                                         custom
-                            >
-                                <h5 class="card-title" @click="navigate">{{ comic.title }}</h5>
-                            </router-link>
-                            <p class="card-text" v-html="comic.description"></p>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col" v-for="comic of comics" :key="comic.id">
+                <router-link :to="{name: 'comic-details', params: {comicId: comic.id}}"
+                             v-slot="{navigate}"
+                             custom
+                >
+                    <div class="card shadow mb-4 mt-4 g-0 border-0 bg-dark text-white" @click="navigate">
+                        <img :src="getImg(comic)" class="card-img h-100" alt="...">
+                        <div class="card-footer">
+                            <div class="float-start">
+                                {{ comic.title }}
+                            </div>
+                            <div class="float-end">
+                                <a class="btn p-0 m-0" @click="favorite(comic.id)">
+                                    <i :id="`icon-${comic.id}`"
+                                       :favorite="comic.favorite"
+                                       :class="{
+                                            'fas fa-heart text-danger': comic.favorite,
+                                            'far fa-heart text-danger': !comic.favorite,
+                                       }"
+                                       ></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="float-end">
-                        <a class="btn p-0 m-0">
-                            <i class="far fa-heart"></i>
-                        </a>
-                    </div>
-                </div>
+                </router-link>
             </div>
         </div>
+
         <div class="d-flex justify-content-center" v-if="isLoading">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -42,6 +53,9 @@
         </div>
         <div class="d-flex justify-content-center my-5" v-if="isLastPage">
             No more comics...
+        </div>
+        <div class="d-flex justify-content-center my-5" v-if="searchNotFound">
+            No results found...
         </div>
     </div>
 </template>
@@ -58,16 +72,12 @@ export default {
             search: undefined,
             isLoading: false,
             isLastPage: false,
+            onlyFavorite: false,
+            searchNotFound: false,
         }
     },
     beforeMount() {
-        this.isLoading = true
-        comicService.list(this.offset)
-            .then(resp => {
-                this.isLoading = false
-                this.isLastPage = resp.data.offset + resp.data.count === resp.data.total
-                this.comics = resp.data.results
-            })
+        this.listing()
     },
     mounted() {
         document.addEventListener('scroll', this.onScroll, {passive: true, capture: true})
@@ -76,6 +86,40 @@ export default {
         document.removeEventListener('scroll', this.onScroll)
     },
     methods: {
+        favorite(comicId){
+            const comicIcon = document.getElementById(`icon-${comicId}`)
+            const isFavorite = comicIcon.getAttribute("favorite")
+            if(isFavorite) {
+                comicService.unfavorite(comicId).then(csFav => {
+                    comicIcon.classList = "far fa-heart text-danger"
+                    comicIcon.removeAttribute("favorite")
+                })
+            } else {
+                comicService.favorite(comicId).then(csFav => {
+                    comicIcon.classList = "fas fa-heart text-danger"
+                    comicIcon.setAttribute("favorite", "true")
+                })
+            }
+        },
+        showOnlyFavorite() {
+            if(!this.onlyFavorite){
+                this.listing()
+                return
+            }
+            this.isLoading = true
+            comicService.favorites()
+                .then(resp => {
+                    this.comics = []
+                    resp.forEach(_ => {
+                        _.then(comic => {
+                            const _ = comic.data.results[0]
+                            _.favorite = true
+                            this.comics.push(_)
+                        })
+                    })
+                    this.isLoading = false
+                })
+        },
         getImg(it) {
             const im = it.thumbnail
             if (im) {
@@ -83,19 +127,30 @@ export default {
             }
             return ""
         },
+        listing() {
+            this.isLoading = true
+            comicService.list(this.offset)
+                .then(resp => {
+                    this.isLoading = false
+                    this.isLastPage = resp.data.offset + resp.data.count === resp.data.total
+                    this.comics = resp.data.results
+                })
+        },
         onSearch() {
             this.isLoading = true
+            this.onlyFavorite = false
             this.search = this.search === "" ? undefined : this.search
             comicService.list(this.offset, this.search)
                 .then(resp => {
-                    this.isLastPage = resp.data.offset + resp.data.count === resp.data.total
                     this.comics = resp.data.results
+                    this.isLastPage = resp.data.offset + resp.data.count === resp.data.total && this.comics.length > 0
+                    this.searchNotFound = this.comics.length < 1
                     this.isLoading = false
                 })
         },
         onScroll() {
             let bottomOfWindow = document.body.scrollTop + document.body.offsetHeight > document.body.scrollHeight - 256
-            if (bottomOfWindow && !this.isLoading && !this.isLastPage) {
+            if (bottomOfWindow && !this.isLoading && !this.isLastPage && !this.onlyFavorite) {
                 this.isLoading = true
                 this.offset = this.offset + 20
                 comicService.list(this.offset, this.search)
