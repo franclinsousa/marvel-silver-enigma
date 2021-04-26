@@ -83,7 +83,7 @@ export default {
         document.addEventListener('scroll', this.onScroll, {passive: true, capture: true})
     },
     beforeDestroy() {
-        document.removeEventListener('scroll', this.onScroll)
+        document.removeEventListener('scroll', this.onScroll, {passive: true, capture: true})
     },
     methods: {
         favorite(comicId){
