@@ -19,30 +19,30 @@
         </div>
         <div class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col" v-for="comic of comics" :key="comic.id">
-                <router-link :to="{name: 'comic-details', params: {comicId: comic.id}}"
-                             v-slot="{navigate}"
-                             custom
-                >
-                    <div class="card shadow mb-4 mt-4 g-0 border-0 bg-dark text-white" @click="navigate">
-                        <img :src="getImg(comic)" class="card-img h-100" alt="...">
-                        <div class="card-footer">
-                            <div class="float-start">
-                                {{ comic.title }}
-                            </div>
-                            <div class="float-end">
-                                <a class="btn p-0 m-0" @click="favorite(comic.id)">
-                                    <i :id="`icon-${comic.id}`"
-                                       :favorite="comic.favorite"
-                                       :class="{
-                                            'fas fa-heart text-danger': comic.favorite,
-                                            'far fa-heart text-danger': !comic.favorite,
-                                       }"
-                                       ></i>
-                                </a>
-                            </div>
+                <div class="card shadow mb-4 mt-4 g-0 border-0 bg-dark text-white">
+                    <router-link :to="{name: 'comic-details', params: {comicId: comic.id}}"
+                                 v-slot="{navigate}"
+                                 custom
+                    >
+                        <img :src="getImg(comic)" class="card-img h-100" :alt="comic.title" @click="navigate">
+                    </router-link>
+                    <div class="card-footer">
+                        <div class="float-start">
+                            {{ comic.title }}
+                        </div>
+                        <div class="float-end">
+                            <a class="btn p-0 m-0" @click="favorite(comic.id)">
+                                <i :id="`icon-${comic.id}`"
+                                   :favorite="comic.favorite"
+                                   :class="{
+                                        'fas fa-heart text-danger': comic.favorite,
+                                        'far fa-heart text-danger': !comic.favorite,
+                                   }"
+                                   ></i>
+                            </a>
                         </div>
                     </div>
-                </router-link>
+                </div>
             </div>
         </div>
 
